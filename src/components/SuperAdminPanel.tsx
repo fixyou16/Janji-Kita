@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { ThemeItem } from '../types/app';
-import { 
-  Shield, DollarSign, ShoppingBag, Users, Plus, 
-  CheckCircle2, AlertCircle, Check, ArrowRight, 
-  Palette, Smartphone, RefreshCw, Eye
+import {
+  Shield, DollarSign, ShoppingBag, Users, Plus,
+  CheckCircle2, AlertCircle, Check, ArrowRight,
+  Palette, Smartphone, RefreshCw, Eye, ImagePlus, Link2
 } from 'lucide-react';
 
 export const SuperAdminPanel: React.FC = () => {
-  const { 
-    orders, 
-    themes, 
-    users, 
-    withdrawals, 
-    updateOrderStatus, 
-    approveWithdrawal, 
-    showToast 
+  const {
+    orders,
+    themes,
+    users,
+    withdrawals,
+    preweddingSubmissions,
+    updateOrderStatus,
+    approveWithdrawal,
+    showToast,
+    approvePreweddingSubmission,
+    rejectPreweddingSubmission,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'orders' | 'withdrawals' | 'themes'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'withdrawals' | 'themes' | 'prewedding'>('orders');
 
   const totalGMV = orders
     .filter((o) => o.paymentStatus === 'paid')
@@ -33,10 +36,15 @@ export const SuperAdminPanel: React.FC = () => {
     showToast(`Transfer penarikan dana Rp ${amount.toLocaleString('id-ID')} kepada ${name} telah disetujui!`);
   };
 
+  const statusStyle: Record<string, string> = {
+    submitted: 'bg-[#f5eee8] text-[#9c614b]',
+    under_review: 'bg-[#f2efe9] text-[#766e65]',
+    approved: 'bg-[#ecf3ef] text-[#55705d]',
+    rejected: 'bg-[#f9e9e7] text-[#a6554d]',
+  };
+
   return (
     <div className="space-y-6 py-6 max-w-4xl mx-auto">
-      
-      {/* 1. Header Ringkas */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e8e4dc] pb-4">
         <div>
           <div className="text-[11px] font-medium text-[#9c614b] uppercase tracking-wider">
@@ -46,7 +54,7 @@ export const SuperAdminPanel: React.FC = () => {
             Panel Super Admin Mahligai
           </h1>
           <p className="text-xs text-[#766e65]">
-            Pantau arus transaksi, proses persetujuan komisi reseller, dan katalog tema.
+            Pantau transaksi, review pengajuan prewedding, dan kelola katalog tema.
           </p>
         </div>
 
@@ -56,7 +64,6 @@ export const SuperAdminPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Metrik Global Platform */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-4 rounded-xl bg-white border border-[#e8e4dc] shadow-2xs">
           <div className="text-[10px] uppercase tracking-wider text-[#9c9489] font-medium">Gross Revenue (GMV)</div>
@@ -91,14 +98,11 @@ export const SuperAdminPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Segmented Tabs */}
-      <div className="flex items-center gap-1 bg-[#f0eae1] p-1 rounded-xl w-fit">
+      <div className="flex items-center gap-1 bg-[#f0eae1] p-1 rounded-xl w-fit flex-wrap">
         <button
           onClick={() => setActiveTab('orders')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-            activeTab === 'orders'
-              ? 'bg-white text-[#36322e] shadow-2xs'
-              : 'text-[#766e65] hover:text-[#36322e]'
+            activeTab === 'orders' ? 'bg-white text-[#36322e] shadow-2xs' : 'text-[#766e65] hover:text-[#36322e]'
           }`}
         >
           Pesanan & Transaksi ({orders.length})
@@ -107,9 +111,7 @@ export const SuperAdminPanel: React.FC = () => {
         <button
           onClick={() => setActiveTab('withdrawals')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-            activeTab === 'withdrawals'
-              ? 'bg-white text-[#36322e] shadow-2xs'
-              : 'text-[#766e65] hover:text-[#36322e]'
+            activeTab === 'withdrawals' ? 'bg-white text-[#36322e] shadow-2xs' : 'text-[#766e65] hover:text-[#36322e]'
           }`}
         >
           Pencairan Reseller ({withdrawals.length})
@@ -118,16 +120,22 @@ export const SuperAdminPanel: React.FC = () => {
         <button
           onClick={() => setActiveTab('themes')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-            activeTab === 'themes'
-              ? 'bg-white text-[#36322e] shadow-2xs'
-              : 'text-[#766e65] hover:text-[#36322e]'
+            activeTab === 'themes' ? 'bg-white text-[#36322e] shadow-2xs' : 'text-[#766e65] hover:text-[#36322e]'
           }`}
         >
           Katalog Desain ({themes.length})
         </button>
+
+        <button
+          onClick={() => setActiveTab('prewedding')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+            activeTab === 'prewedding' ? 'bg-white text-[#36322e] shadow-2xs' : 'text-[#766e65] hover:text-[#36322e]'
+          }`}
+        >
+          Prewedding Review ({preweddingSubmissions.length})
+        </button>
       </div>
 
-      {/* 4. Tab Content */}
       {activeTab === 'orders' && (
         <div className="bg-white border border-[#e8e4dc] rounded-2xl overflow-hidden shadow-2xs">
           <div className="overflow-x-auto">
@@ -155,8 +163,8 @@ export const SuperAdminPanel: React.FC = () => {
                     </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                        order.paymentStatus === 'paid' 
-                          ? 'bg-[#ecf3ef] text-[#55705d]' 
+                        order.paymentStatus === 'paid'
+                          ? 'bg-[#ecf3ef] text-[#55705d]'
                           : 'bg-[#f5eee8] text-[#9c614b]'
                       }`}>
                         {order.paymentStatus === 'paid' ? 'Lunas / Aktif' : 'Menunggu Bayar'}
@@ -216,8 +224,8 @@ export const SuperAdminPanel: React.FC = () => {
                     </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                        w.status === 'completed' 
-                          ? 'bg-[#ecf3ef] text-[#55705d]' 
+                        w.status === 'completed'
+                          ? 'bg-[#ecf3ef] text-[#55705d]'
                           : 'bg-[#f5eee8] text-[#9c614b]'
                       }`}>
                         {w.status === 'completed' ? 'Selesai Ditransfer' : 'Menunggu Approval'}
@@ -265,6 +273,88 @@ export const SuperAdminPanel: React.FC = () => {
         </div>
       )}
 
+      {activeTab === 'prewedding' && (
+        <div className="space-y-4">
+          {preweddingSubmissions.map((submission) => (
+            <div key={submission.id} className="bg-white border border-[#e8e4dc] rounded-2xl p-4 shadow-2xs space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#f2eee8] pb-3">
+                <div>
+                  <div className="text-[10px] uppercase tracking-wider text-[#9c9489]">Submission #{submission.submissionNumber}</div>
+                  <h3 className="font-serif-luxury text-lg font-medium text-[#36322e] mt-0.5">
+                    {submission.groomName} & {submission.brideName}
+                  </h3>
+                </div>
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-[10px] font-medium ${statusStyle[submission.status]}`}>
+                  {submission.status}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px] text-[#5c554e]">
+                <div className="space-y-1">
+                  <div><span className="font-medium">Nama Orang Tua Pria:</span> {submission.groomParentName}</div>
+                  <div><span className="font-medium">Anak ke:</span> {submission.groomChildNumber}</div>
+                  <div><span className="font-medium">WhatsApp:</span> {submission.whatsapp}</div>
+                  <div><span className="font-medium">Tanggal Acara:</span> {submission.weddingDate}</div>
+                  <div><span className="font-medium">Venue:</span> {submission.venueName}</div>
+                </div>
+
+                <div className="space-y-1">
+                  <div><span className="font-medium">Nama Orang Tua Wanita:</span> {submission.brideParentName}</div>
+                  <div><span className="font-medium">Anak ke:</span> {submission.brideChildNumber}</div>
+                  <div><span className="font-medium">Email:</span> {submission.email}</div>
+                  <div><span className="font-medium">Tema:</span> {submission.themeCategory}</div>
+                  <div><span className="font-medium">Total Foto:</span> {submission.totalPhotosUploaded}</div>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-dashed border-[#e2d3ca] bg-[#faf9f6] p-3 text-[11px] text-[#766e65] flex items-center justify-between gap-2">
+                <span>Backup Google Form: {submission.googleFormBackupLink || 'Tidak tersedia'}</span>
+                {submission.googleFormBackupLink && (
+                  <a href={submission.googleFormBackupLink} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[#9c614b] font-medium underline">
+                    <Link2 className="w-3.5 h-3.5" />
+                    Buka
+                  </a>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {submission.galleryPhotos.slice(0, 4).map((photo, index) => (
+                  <img key={`${submission.id}-${index}`} src={photo} alt={`Prewedding ${index + 1}`} className="h-24 w-full object-cover rounded-lg border border-[#e8e4dc]" />
+                ))}
+              </div>
+
+              {submission.additionalNotes && (
+                <div className="bg-[#faf9f6] border border-[#f2eee8] rounded-xl p-3 text-[11px] text-[#5c554e]">
+                  <span className="font-medium text-[#36322e]">Catatan Pengantin:</span> {submission.additionalNotes}
+                </div>
+              )}
+
+              {submission.adminNotes && (
+                <div className="bg-[#f5eee8] border border-[#e8d3c2] rounded-xl p-3 text-[11px] text-[#5c554e]">
+                  <span className="font-medium text-[#36322e]">Catatan Admin:</span> {submission.adminNotes}
+                </div>
+              )}
+
+              {submission.status === 'submitted' && (
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    onClick={() => rejectPreweddingSubmission(submission.id, 'Data belum sesuai / perlu revisi')}
+                    className="px-3 py-2 rounded-xl border border-[#e8e4dc] bg-white text-[#36322e] text-xs font-medium hover:bg-[#faf9f6] transition"
+                  >
+                    Tolak
+                  </button>
+                  <button
+                    onClick={() => approvePreweddingSubmission(submission.id, 'Data lengkap dan foto sesuai.')}
+                    className="px-3 py-2 rounded-xl bg-[#55705d] text-white text-xs font-medium hover:bg-[#485f4f] transition"
+                  >
+                    Approve
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
