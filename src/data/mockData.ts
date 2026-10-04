@@ -1,4 +1,4 @@
-import { User, ThemeItem, Invitation, Guest, Order, Withdrawal } from '../types/app';
+import { User, ThemeItem, Invitation, Guest, Order, Withdrawal, PreweddingSubmission } from '../types/app';
 
 export const INITIAL_USERS: User[] = [
   {
@@ -107,28 +107,24 @@ export const INITIAL_INVITATIONS: Invitation[] = [
     title: 'The Wedding of Romeo & Juliet',
     themeId: 'theme_rustic',
     isPublished: true,
-
     groomNickname: 'Romeo',
     groomFullName: 'Romeo Pratama, S.Kom',
     groomParents: 'Putra pertama dari Bpk. Ir. Hendra Pratama & Ibu Rina Marlina',
     groomInstagram: '@romeopratama',
     groomPhoto: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400',
-
     brideNickname: 'Juliet',
     brideFullName: 'Juliet Anggraini, S.E',
     brideParents: 'Putri kedua dari Bpk. Drs. Suryadi & Ibu Dewi Kartika',
     brideInstagram: '@julietanggraini',
     bridePhoto: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
-
     eventDate: '2026-10-24',
     akadTime: '08:00 - 10:00 WIB',
     resepsiTime: '11:00 - 14:00 WIB',
     venueName: 'Grand Ballroom Hotel Mulia Senayan',
     venueAddress: 'Jl. Asia Afrika, Gelora, Kecamatan Tanah Abang, Kota Jakarta Pusat, DKI Jakarta 10270',
     googleMapsUrl: 'https://maps.google.com/?q=Hotel+Mulia+Senayan',
-
     musicTitle: 'Canon in D - Romantic Wedding Orchestra',
-    musicUrl: 'https://actions.google.com/sounds/v1/weather/rain_heavy.ogg', // reliable safe web sound
+    musicUrl: 'https://actions.google.com/sounds/v1/weather/rain_heavy.ogg',
     galleryPhotos: [
       '/src/assets/images/theme_warm_botanical_1791137336774.jpg',
       '/src/assets/images/theme_emerald_gold_1791137357370.jpg',
@@ -165,7 +161,7 @@ export const INITIAL_INVITATIONS: Invitation[] = [
       }
     ],
     dressCode: 'Earth Tone / Pastel Elegance (Formal Attire)',
-    quote: 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. (QS. Ar-Rum: 21)',
+    quote: 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antara kamu rasa kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.',
   }
 ];
 
@@ -249,7 +245,7 @@ export const INITIAL_ORDERS: Order[] = [
     themeName: 'Rustic Warm Botanical',
     totalAmount: 149000,
     resellerId: 'user_reseller_1',
-    resellerCommission: 29800, // 20%
+    resellerCommission: 29800,
     paymentStatus: 'paid',
     paymentMethod: 'BCA Virtual Account',
     snapToken: 'SNAP-TOKEN-MOCK-9921',
@@ -302,4 +298,64 @@ export const INITIAL_WITHDRAWALS: Withdrawal[] = [
     status: 'completed',
     createdAt: '2026-09-28 14:00',
   }
+];
+
+export const INITIAL_PREWEDDING_SUBMISSIONS: PreweddingSubmission[] = [
+  {
+    id: 'prewedding_1',
+    submissionNumber: 'PW-2601-A12B',
+    groomName: 'Budi Santoso',
+    groomNickname: 'Budi',
+    groomParentName: 'Bapak Suyadi & Ibu Sumiati',
+    groomChildNumber: 2,
+    brideName: 'Sinta Dewi',
+    brideNickname: 'Sinta',
+    brideParentName: 'Bapak Bambang & Ibu Wati',
+    brideChildNumber: 1,
+    whatsapp: '081234567890',
+    email: 'budi.sinta@example.com',
+    weddingDate: '2026-11-12',
+    venueName: 'Hotel Grand Palace',
+    venueAddress: 'Jl. Merdeka No. 12, Bandung',
+    themeCategory: 'Modern',
+    additionalNotes: 'Mau konsep modern minimalis dengan nuansa warm tone.',
+    galleryPhotos: [
+      'https://images.unsplash.com/photo-1520854221256-17451cc331bf',
+      'https://images.unsplash.com/photo-1519741497674-611481863552',
+    ],
+    totalPhotosUploaded: 2,
+    status: 'submitted',
+    submittedAt: '2026-10-04T09:00:00.000Z',
+    googleFormBackupLink: 'https://forms.gle/backup-prewedding',
+  },
+  {
+    id: 'prewedding_2',
+    submissionNumber: 'PW-2601-C34D',
+    groomName: 'Farhan Putra',
+    groomNickname: 'Farhan',
+    groomParentName: 'Bapak Hasan & Ibu Rita',
+    groomChildNumber: 3,
+    brideName: 'Nadia Lestari',
+    brideNickname: 'Nadia',
+    brideParentName: 'Bapak Arif & Ibu Nia',
+    brideChildNumber: 2,
+    whatsapp: '082233445566',
+    email: 'farhan.nadia@example.com',
+    weddingDate: '2026-12-02',
+    venueName: 'The Garden Hall',
+    venueAddress: 'Jl. Cempaka No. 98, Yogyakarta',
+    themeCategory: 'Rustic',
+    additionalNotes: 'Ingin banyak foto alam dan nuansa vintage.',
+    galleryPhotos: [
+      'https://images.unsplash.com/photo-1529636799233-9a1f0e34d9f4',
+      'https://images.unsplash.com/photo-1522673607200-164d1b6ce486',
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc',
+    ],
+    totalPhotosUploaded: 3,
+    status: 'approved',
+    submittedAt: '2026-10-03T12:00:00.000Z',
+    reviewedAt: '2026-10-04T08:15:00.000Z',
+    adminNotes: 'Foto lengkap dan data sudah sesuai.',
+    googleFormBackupLink: 'https://forms.gle/backup-prewedding',
+  },
 ];
