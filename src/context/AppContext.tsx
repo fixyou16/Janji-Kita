@@ -1,20 +1,26 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, UserRole, ThemeItem, Invitation, Guest, Order, Withdrawal } from '../types/app';
-import { 
-  INITIAL_USERS, INITIAL_THEMES, INITIAL_INVITATIONS, 
-  INITIAL_GUESTS, INITIAL_ORDERS, INITIAL_WITHDRAWALS 
+import { User, UserRole, ThemeItem, Invitation, Guest, Order, Withdrawal, PreweddingSubmission } from '../types/app';
+import {
+  INITIAL_USERS,
+  INITIAL_THEMES,
+  INITIAL_INVITATIONS,
+  INITIAL_GUESTS,
+  INITIAL_ORDERS,
+  INITIAL_WITHDRAWALS,
+  INITIAL_PREWEDDING_SUBMISSIONS,
 } from '../data/mockData';
 
-export type ViewType = 
-  | 'landing' 
-  | 'customer_dashboard' 
-  | 'editor' 
-  | 'guestbook' 
-  | 'checkout' 
-  | 'reseller_portal' 
-  | 'admin_panel' 
+export type ViewType =
+  | 'landing'
+  | 'customer_dashboard'
+  | 'editor'
+  | 'guestbook'
+  | 'checkout'
+  | 'reseller_portal'
+  | 'admin_panel'
   | 'live_invitation'
-  | 'dev_architecture';
+  | 'dev_architecture'
+  | 'prewedding_form';
 
 interface AppContextType {
   currentUser: User;
@@ -25,13 +31,13 @@ interface AppContextType {
   guests: Guest[];
   orders: Order[];
   withdrawals: Withdrawal[];
+  preweddingSubmissions: PreweddingSubmission[];
   currentView: ViewType;
   selectedThemeForCheckout: ThemeItem | null;
   selectedGuestName: string;
   selectedGuestForLive: Guest | null;
   toastMessage: string | null;
-  
-  // Actions
+
   switchRole: (role: UserRole) => void;
   setCurrentView: (view: ViewType) => void;
   setSelectedGuestName: (name: string) => void;
@@ -51,12 +57,14 @@ interface AppContextType {
   requestWithdrawal: (amount: number, bank: string, accNum: string, accHolder: string) => void;
   approveWithdrawal: (id: string) => void;
   addNewTheme: (theme: ThemeItem) => void;
+  addPreweddingSubmission: (submission: Omit<PreweddingSubmission, 'id' | 'submissionNumber' | 'status' | 'submittedAt'>) => PreweddingSubmission;
+  approvePreweddingSubmission: (id: string, notes?: string) => void;
+  rejectPreweddingSubmission: (id: string, notes?: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // 1. Core State with LocalStorage fallback
   const [users, setUsers] = useState<User[]>(() => {
     const saved = localStorage.getItem('mahligai_users');
     return saved ? JSON.parse(saved) : INITIAL_USERS;
@@ -89,13 +97,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : INITIAL_WITHDRAWALS;
   });
 
+  const [preweddingSubmissions, setPreweddingSubmissions] = useState<PreweddingSubmission[]>(() => {
+    const saved = localStorage.getItem('mahligai_prewedding_submissions');
+    return saved ? JSON.parse(saved) : INITIAL_PREWEDDING_SUBMISSIONS;
+  });
+
   const [currentView, setCurrentView] = useState<ViewType>('landing');
   const [selectedThemeForCheckout, setSelectedThemeForCheckout] = useState<ThemeItem | null>(null);
   const [selectedGuestName, setSelectedGuestName] = useState<string>('Bpk. Budi Santoso & Keluarga');
   const [selectedGuestForLive, setSelectedGuestForLive] = useState<Guest | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Sync to localStorage
   useEffect(() => {
     localStorage.setItem('mahligai_users', JSON.stringify(users));
   }, [users]);
@@ -116,7 +128,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('mahligai_withdrawals', JSON.stringify(withdrawals));
   }, [withdrawals]);
 
-  // Derived current user & invitation
+  useEffect(() => {
+    localStorage.setItem('mahligai_prewedding_submissions', JSON.stringify(preweddingSubmissions));
+  }, [preweddingSubmissions]);
+
   const currentUser = users.find((u) => u.role === currentRole) || users[0];
   const activeInvitation = invitations[0];
 
@@ -161,22 +176,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateGuest = (guestId: string, updates: Partial<Guest>) => {
-    setGuests((prev) =>
-      prev.map((g) => (g.id === guestId ? { ...g, ...updates } : g))
-    );
+    setGuests((prev) => prev.map((g) => (g.id === guestId ? { ...g, ...updates } : g)));
   };
 
-  const updateGuestRsvp = (
-    guestId: string,
-    status: 'attending' | 'not_attending',
-    pax: number,
-    wishes: string
-  ) => {
+  const updateGuestRsvp = (guestId: string, status: 'attending' | 'not_attending', pax: number, wishes: string) => {
     setGuests((prev) =>
       prev.map((g) =>
-        g.id === guestId
-          ? { ...g, rsvpStatus: status, rsvpPax: pax, wishes: wishes }
-          : g
+        g.id === guestId ? { ...g, rsvpStatus: status, rsvpPax: pax, wishes } : g
       )
     );
     showToast('Konfirmasi kehadiran tamu diperbarui!');
@@ -195,9 +201,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           return {
             ...g,
             checkedIn: newCheckedIn,
-            checkedInAt: newCheckedIn
-              ? new Date().toISOString().replace('T', ' ').substring(0, 16)
-              : undefined,
+            checkedInAt: newCheckedIn ? new Date().toISOString().replace('T', ' ').substring(0, 16) : undefined,
           };
         }
         return g;
@@ -205,22 +209,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  const submitPublicRsvp = (
-    guestName: string,
-    status: 'attending' | 'not_attending',
-    pax: number,
-    wishes: string
-  ) => {
+  const submitPublicRsvp = (guestName: string, status: 'attending' | 'not_attending', pax: number, wishes: string) => {
     const existing = guests.find((g) => g.name.toLowerCase() === guestName.toLowerCase());
     if (existing) {
       updateGuestRsvp(existing.id, status, pax, wishes);
     } else {
-      addGuest({
-        name: guestName,
-        rsvpStatus: status,
-        rsvpPax: pax,
-        wishes,
-      });
+      addGuest({ name: guestName, rsvpStatus: status, rsvpPax: pax, wishes });
     }
   };
 
@@ -230,15 +224,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     coupleData?: { groomName?: string; brideName?: string; phone?: string }
   ): Order => {
     const orderNum = `ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-    const commission = Math.round(theme.price * 0.20); // 20% reseller commission
+    const commission = Math.round(theme.price * 0.20);
 
     const newOrder: Order = {
       id: `ord_${Date.now()}`,
       orderNumber: orderNum,
       userId: currentUser.id,
-      userName: coupleData?.groomName && coupleData?.brideName 
-        ? `${coupleData.groomName} & ${coupleData.brideName}` 
-        : `${activeInvitation.groomNickname} & ${activeInvitation.brideNickname}`,
+      userName: coupleData?.groomName && coupleData?.brideName ? `${coupleData.groomName} & ${coupleData.brideName}` : `${activeInvitation.groomNickname} & ${activeInvitation.brideNickname}`,
       userPhone: coupleData?.phone || currentUser.phone,
       themeId: theme.id,
       themeName: theme.name,
@@ -254,15 +246,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setOrders((prev) => [newOrder, ...prev]);
 
-    // Credit reseller commission
     if (newOrder.resellerId) {
       setUsers((prev) =>
         prev.map((u) => {
           if (u.id === newOrder.resellerId) {
-            return {
-              ...u,
-              balance: (u.balance || 0) + newOrder.resellerCommission,
-            };
+            return { ...u, balance: (u.balance || 0) + newOrder.resellerCommission };
           }
           return u;
         })
@@ -273,9 +261,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateOrderStatus = (orderId: string, status: 'paid' | 'pending' | 'failed') => {
-    setOrders((prev) =>
-      prev.map((ord) => (ord.id === orderId ? { ...ord, paymentStatus: status } : ord))
-    );
+    setOrders((prev) => prev.map((ord) => (ord.id === orderId ? { ...ord, paymentStatus: status } : ord)));
   };
 
   const processPaymentSuccess = (orderId: string, paymentMethod: string) => {
@@ -296,20 +282,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       })
     );
 
-    // Auto publish invitation
-    setInvitations((prev) =>
-      prev.map((inv) => ({ ...inv, isPublished: true }))
-    );
+    setInvitations((prev) => prev.map((inv) => ({ ...inv, isPublished: true })));
 
-    // Credit reseller commission
     if (orderToUpdate?.resellerId) {
       setUsers((prev) =>
         prev.map((u) => {
           if (u.id === orderToUpdate?.resellerId) {
-            return {
-              ...u,
-              balance: (u.balance || 0) + (orderToUpdate?.resellerCommission || 0),
-            };
+            return { ...u, balance: (u.balance || 0) + (orderToUpdate?.resellerCommission || 0) };
           }
           return u;
         })
@@ -339,14 +318,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const approveWithdrawal = (id: string) => {
-    setWithdrawals((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, status: 'completed' } : w))
-    );
+    setWithdrawals((prev) => prev.map((w) => (w.id === id ? { ...w, status: 'completed' } : w)));
   };
 
   const addNewTheme = (theme: ThemeItem) => {
     setThemes((prev) => [...prev, theme]);
     showToast(`Tema baru "${theme.name}" berhasil ditambahkan ke katalog!`);
+  };
+
+  const addPreweddingSubmission = (
+    submission: Omit<PreweddingSubmission, 'id' | 'submissionNumber' | 'status' | 'submittedAt'>
+  ): PreweddingSubmission => {
+    const newSubmission: PreweddingSubmission = {
+      ...submission,
+      id: `prewedding_${Date.now()}`,
+      submissionNumber: `PW-${new Date().toISOString().slice(2, 10).replace(/-/g, '')}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
+      status: 'submitted',
+      submittedAt: new Date().toISOString(),
+    };
+
+    setPreweddingSubmissions((prev) => [newSubmission, ...prev]);
+    return newSubmission;
+  };
+
+  const approvePreweddingSubmission = (id: string, notes?: string) => {
+    setPreweddingSubmissions((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, status: 'approved', reviewedAt: new Date().toISOString(), adminNotes: notes || item.adminNotes }
+          : item
+      )
+    );
+    showToast('Pengajuan prewedding berhasil disetujui.');
+  };
+
+  const rejectPreweddingSubmission = (id: string, notes?: string) => {
+    setPreweddingSubmissions((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, status: 'rejected', reviewedAt: new Date().toISOString(), adminNotes: notes || item.adminNotes }
+          : item
+      )
+    );
+    showToast('Pengajuan prewedding ditolak.');
   };
 
   return (
@@ -360,6 +374,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         guests,
         orders,
         withdrawals,
+        preweddingSubmissions,
         currentView,
         selectedThemeForCheckout,
         selectedGuestName,
@@ -384,6 +399,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         requestWithdrawal,
         approveWithdrawal,
         addNewTheme,
+        addPreweddingSubmission,
+        approvePreweddingSubmission,
+        rejectPreweddingSubmission,
       }}
     >
       {children}

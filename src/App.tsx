@@ -10,13 +10,13 @@ import { ResellerPortal } from './components/ResellerPortal';
 import { SuperAdminPanel } from './components/SuperAdminPanel';
 import { LiveInvitationPage } from './components/LiveInvitationPage';
 import { DeveloperArchitectureDrawer } from './components/DeveloperArchitectureDrawer';
+import { PreweddingForm } from './components/PreweddingForm';
 import { Check, Feather } from 'lucide-react';
 
 function AppContent() {
   const { currentView, toastMessage } = useApp();
   const [isDevDrawerOpen, setIsDevDrawerOpen] = useState(false);
 
-  // If viewing the live invitation, render directly
   if (currentView === 'live_invitation') {
     return (
       <>
@@ -33,11 +33,8 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-[#f7f5f0] text-[#36322e] flex flex-col font-sans selection:bg-[#f5eee8] selection:text-[#36322e]">
-      
-      {/* Soft Header */}
       <Header onOpenDevDrawer={() => setIsDevDrawerOpen(true)} />
 
-      {/* Main Workspace */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6">
         {currentView === 'landing' && <LandingPage />}
         {currentView === 'customer_dashboard' && <CustomerDashboard />}
@@ -46,9 +43,9 @@ function AppContent() {
         {currentView === 'checkout' && <CheckoutModal />}
         {currentView === 'reseller_portal' && <ResellerPortal />}
         {currentView === 'admin_panel' && <SuperAdminPanel />}
+        {currentView === 'prewedding_form' && <PreweddingForm />}
       </main>
 
-      {/* Soft Minimal Footer */}
       <footer className="border-t border-[#e8e4dc] py-8 text-xs text-[#9c9489] mt-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -75,20 +72,17 @@ function AppContent() {
         </div>
       </footer>
 
-      {/* Developer Architecture & Code Drawer */}
       <DeveloperArchitectureDrawer
         isOpen={isDevDrawerOpen}
         onClose={() => setIsDevDrawerOpen(false)}
       />
 
-      {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-5 right-5 z-50 bg-white border border-[#e8e4dc] text-[#36322e] px-3.5 py-2 rounded-xl shadow-md flex items-center gap-2 text-xs animate-fadeIn">
           <Check className="w-3.5 h-3.5 text-[#9c614b] shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
-
     </div>
   );
 }

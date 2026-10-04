@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { Check, ImagePlus, Link2, Save, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -23,10 +23,10 @@ const initialForm = {
 
 export const PreweddingForm: React.FC = () => {
   const { addPreweddingSubmission, showToast } = useApp();
-  const [form, setForm] = useState(initialForm);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = React.useState(initialForm);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const parsedGalleryCount = useMemo(() => {
+  const parsedGalleryCount = React.useMemo(() => {
     return form.galleryPhotoUrls
       .split(/\n|,/)
       .map((url) => url.trim())
@@ -40,13 +40,7 @@ export const PreweddingForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (
-      !form.groomName ||
-      !form.brideName ||
-      !form.whatsapp ||
-      !form.weddingDate ||
-      !form.venueName
-    ) {
+    if (!form.groomName || !form.brideName || !form.whatsapp || !form.weddingDate || !form.venueName) {
       showToast('Harap isi data utama seperti nama, WhatsApp, tanggal acara, dan venue.');
       return;
     }
@@ -88,12 +82,8 @@ export const PreweddingForm: React.FC = () => {
     <div className="bg-white border border-[#e8e4dc] rounded-2xl p-5 shadow-2xs space-y-5">
       <div className="flex items-start justify-between gap-3 border-b border-[#f2eee8] pb-3">
         <div>
-          <div className="text-[11px] font-medium text-[#9c614b] uppercase tracking-wider">
-            Form Pengantin
-          </div>
-          <h3 className="font-serif-luxury text-lg font-medium text-[#36322e] mt-0.5">
-            Data Diri & Galeri Prewedding
-          </h3>
+          <div className="text-[11px] font-medium text-[#9c614b] uppercase tracking-wider">Form Pengantin</div>
+          <h3 className="font-serif-luxury text-lg font-medium text-[#36322e] mt-0.5">Data Diri & Galeri Prewedding</h3>
         </div>
         <div className="inline-flex items-center gap-1.5 bg-[#f5eee8] text-[#9c614b] px-2 py-1 rounded-full text-[10px] font-medium">
           <Sparkles className="w-3 h-3" />
