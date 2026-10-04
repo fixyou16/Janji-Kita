@@ -37,6 +37,49 @@ export interface LoveStoryItem {
   description: string;
 }
 
+export interface PreweddingSubmission {
+  id: string;
+  submissionNumber: string;
+  
+  // Data Mempelai Pria
+  groomName: string;
+  groomNickname: string;
+  groomParentName: string;
+  groomChildNumber: number; // anak ke berapa
+  
+  // Data Mempelai Wanita
+  brideName: string;
+  brideNickname: string;
+  brideParentName: string;
+  brideChildNumber: number; // anak ke berapa
+  
+  // Kontak
+  whatsapp: string;
+  email: string;
+  
+  // Acara
+  weddingDate: string; // YYYY-MM-DD
+  venueName: string;
+  venueAddress: string;
+  
+  // Preferensi
+  themeCategory?: 'Modern' | 'Rustic' | 'Islami' | 'Adat' | 'Minimalis' | 'Floral';
+  additionalNotes: string;
+  
+  // Galeri Prewedding
+  galleryPhotos: string[]; // URLs foto
+  totalPhotosUploaded: number;
+  
+  // Status
+  status: 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected';
+  submittedAt: string;
+  reviewedAt?: string;
+  adminNotes?: string;
+  
+  // Backup
+  googleFormBackupLink?: string;
+}
+
 export interface Invitation {
   id: string;
   userId: string;
