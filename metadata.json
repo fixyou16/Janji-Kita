@@ -1,0 +1,6 @@
+{
+  "name": "JanjiKita - Platform Undangan Digital",
+  "description": "Platform pembuatan undangan pernikahan digital elegan dengan RSVP, pembayaran instan, dan broadcast WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
