@@ -72,21 +72,21 @@ APP_URL=https://your-domain.com
 
 ## 🌐 Deployment
 
+### GitHub Pages
+
+Repository ini menggunakan GitHub Actions untuk build dan deploy otomatis ke GitHub Pages setiap kali perubahan di-push ke branch `main`.
+
+1. Buka **Settings → Pages** di repository GitHub dan pilih **GitHub Actions** sebagai build and deployment source.
+2. Push perubahan ke `main`; workflow akan menjalankan `bun install` dan `bun run build`, lalu menerbitkan folder `dist`.
+3. Situs tersedia di `https://fixyou16.github.io/Janji-Kita/`.
+
+Workflow juga bisa dijalankan manual dari tab **Actions** menggunakan **Run workflow**.
+
+> GitHub Pages hanya meng-host frontend statis; server Express dan rahasia environment tidak tersedia di sana. Jangan masukkan API key ke kode frontend atau artefak build. Gunakan backend terpisah untuk fitur yang memerlukan rahasia atau API server.
+
 ### Deploy ke Vercel
 
-1. Push repository ke GitHub
-2. Kunjungi [vercel.com](https://vercel.com)
-3. Import repository ini
-4. Set environment variables di Vercel dashboard
-5. Deploy!
-
-### Deploy ke Platform Lain
-
-Aplikasi ini bisa di-deploy ke:
-- Netlify
-- GitHub Pages
-- Cloudflare Pages
-- Cloud Run
+Import repository di [Vercel](https://vercel.com) dan konfigurasikan environment variables di dashboard Vercel.
 
 ## 📝 License
 
