@@ -67,18 +67,18 @@ export const LandingPage: React.FC = () => {
         {/* Minimal Metrics */}
         <div className="pt-6 flex items-center justify-center gap-6 sm:gap-10 text-xs text-[#9c9489] border-t border-[#e8e4dc] mt-6">
           <div>
-            <div className="text-base font-serif-luxury font-medium text-[#36322e] tabular-nums">50.000+</div>
-            <div className="text-[10px] text-[#766e65] mt-0.5">Pasangan Bahagia</div>
+            <div className="text-base font-serif-luxury font-medium text-[#36322e] tabular-nums">{themes.length}</div>
+            <div className="text-[10px] text-[#766e65] mt-0.5">Tema Tersedia</div>
           </div>
           <div className="h-4 w-[1px] bg-[#e8e4dc]"></div>
           <div>
-            <div className="text-base font-serif-luxury font-medium text-[#9c614b] tabular-nums">100%</div>
-            <div className="text-[10px] text-[#766e65] mt-0.5">Otomatis Aktif</div>
+            <div className="text-base font-serif-luxury font-medium text-[#9c614b] tabular-nums">1x</div>
+            <div className="text-[10px] text-[#766e65] mt-0.5">Pembayaran Paket</div>
           </div>
           <div className="h-4 w-[1px] bg-[#e8e4dc]"></div>
           <div>
-            <div className="text-base font-serif-luxury font-medium text-[#36322e] tabular-nums">20%</div>
-            <div className="text-[10px] text-[#766e65] mt-0.5">Komisi Mitra WO</div>
+            <div className="text-base font-serif-luxury font-medium text-[#36322e] tabular-nums">3</div>
+            <div className="text-[10px] text-[#766e65] mt-0.5">Jenis Peran</div>
           </div>
         </div>
 
@@ -175,9 +175,9 @@ export const LandingPage: React.FC = () => {
 
         <div className="p-5 rounded-2xl bg-white border border-[#e8e4dc] space-y-2 shadow-2xs">
           <div className="text-xs font-medium text-[#9c614b]">02. Buku Tamu & RSVP</div>
-          <h3 className="text-sm font-medium text-[#36322e]">Kepastian Kehadiran Waktu Nyata</h3>
+          <h3 className="text-sm font-medium text-[#36322e]">Pengelolaan Kehadiran Terstruktur</h3>
           <p className="text-xs text-[#766e65] leading-relaxed">
-            Konfirmasi kehadiran dan estimasi porsi katering terdata rapi di dashboard Anda.
+            Catat konfirmasi kehadiran dan estimasi porsi katering di buku tamu undangan.
           </p>
         </div>
 

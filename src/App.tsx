@@ -11,6 +11,8 @@ import { SuperAdminPanel } from './components/SuperAdminPanel';
 import { LiveInvitationPage } from './components/LiveInvitationPage';
 import { DeveloperArchitectureDrawer } from './components/DeveloperArchitectureDrawer';
 import { Check, Feather } from 'lucide-react';
+import { AccountPortal, AuthScreen } from './components/AuthPortal';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 function AppContent() {
   const { currentView, toastMessage } = useApp();
@@ -68,7 +70,7 @@ function AppContent() {
               Dokumentasi Arsitektur
             </button>
             <span>·</span>
-            <span>Midtrans Payment</span>
+            <span>Pembayaran Demo</span>
             <span>·</span>
             <span>WhatsApp Ready</span>
           </div>
@@ -95,8 +97,27 @@ function AppContent() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <AuthProvider enabled={import.meta.env.VITE_AUTH_MODE === 'server'}>
+      <ApplicationRoot />
+    </AuthProvider>
   );
+}
+
+function ApplicationRoot() {
+  const auth = useAuth();
+
+  if (!auth.enabled) {
+    return (
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    );
+  }
+
+  if (auth.loading) {
+    return <main className="flex min-h-screen items-center justify-center bg-[#f7f5f0] text-sm text-[#766e65]">Memeriksa sesi akun...</main>;
+  }
+
+  if (!auth.user) return <AuthScreen />;
+  return <AccountPortal />;
 }

@@ -1,0 +1,23 @@
+- main [ref=f2e4]:
+  - generic [ref=f2e5]:
+    - generic [ref=f2e12]:
+      - paragraph [ref=f2e13]: Mahligai
+      - paragraph [ref=f2e14]: Akun dilindungi sesi server
+    - heading "Buat akun customer" [level=1] [ref=f2e27]
+    - paragraph [ref=f2e16]: Pendaftaran mandiri hanya membuat akun customer. Peran lain dikelola admin.
+    - generic [ref=f2e17]:
+      - generic [ref=f2e28]:
+        - text: Nama lengkap
+        - textbox "Nama lengkap" [ref=f2e29]
+      - generic [ref=f2e30]:
+        - text: Nomor telepon
+        - textbox "Nomor telepon" [ref=f2e31]
+      - generic [ref=f2e18]:
+        - text: Email
+        - textbox "Email" [ref=f2e19]
+      - generic [ref=f2e20]:
+        - text: Kata sandi
+        - textbox "Kata sandi Minimal 12 karakter." [ref=f2e32]
+        - generic [ref=f2e33]: Minimal 12 karakter.
+      - button "Buat Akun" [ref=f2e34]
+    - button "Sudah punya akun? Masuk" [active] [ref=f2e38]

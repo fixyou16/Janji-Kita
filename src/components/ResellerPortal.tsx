@@ -24,11 +24,13 @@ export const ResellerPortal: React.FC = () => {
 
   const referralCode = currentUser.referralCode || 'BERKAHWO2026';
   const referralLink = `${window.location.origin}/?ref=${referralCode}`;
-  const currentBalance = currentUser.balance || 1450000;
+  const currentBalance = currentUser.balance || 0;
 
-  // Filter orders under this reseller
-  const clientOrders = orders.filter((o) => o.resellerId === currentUser.id || o.resellerCommission > 0);
-  const totalEarned = clientOrders.reduce((sum, o) => (o.paymentStatus === 'paid' ? sum + o.resellerCommission : sum), currentBalance);
+  const clientOrders = orders.filter((o) => o.resellerId === currentUser.id);
+  const ownWithdrawals = withdrawals.filter((withdrawal) => withdrawal.resellerId === currentUser.id);
+  const totalEarned = clientOrders.reduce((sum, o) => (
+    o.paymentStatus === 'paid' ? sum + o.resellerCommission : sum
+  ), 0);
 
   const handleCopyReferral = () => {
     navigator.clipboard.writeText(referralLink);
@@ -97,7 +99,7 @@ export const ResellerPortal: React.FC = () => {
         <div className="p-4 rounded-xl bg-white border border-[#e8e4dc] shadow-2xs">
           <div className="text-[10px] uppercase tracking-wider text-[#9c9489] font-medium">Klien Berhasil</div>
           <div className="text-xl font-serif-luxury font-medium text-[#36322e] mt-0.5 tabular-nums">
-            {clientOrders.length + 8} Pasangan
+            {new Set(clientOrders.map((order) => order.userId)).size} Pasangan
           </div>
           <div className="text-[10px] text-[#766e65] mt-0.5">Memakai kode referral</div>
         </div>
@@ -176,10 +178,10 @@ export const ResellerPortal: React.FC = () => {
             Riwayat Penarikan Rekening
           </h3>
           <div className="space-y-2">
-            {withdrawals.length === 0 ? (
+            {ownWithdrawals.length === 0 ? (
               <p className="text-xs text-[#9c9489] py-4 text-center">Belum ada riwayat penarikan saldo.</p>
             ) : (
-              withdrawals.map((w) => (
+              ownWithdrawals.map((w) => (
                 <div key={w.id} className="p-2.5 rounded-xl bg-[#faf9f6] border border-[#f2eee8] text-xs space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-[#36322e]">Rp {w.amount.toLocaleString('id-ID')}</span>

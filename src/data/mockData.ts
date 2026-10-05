@@ -1,4 +1,8 @@
 import { User, ThemeItem, Invitation, Guest, Order, Withdrawal } from '../types/app';
+import warmBotanicalImage from '../assets/images/theme_warm_botanical_1791137336774.jpg';
+import emeraldGoldImage from '../assets/images/theme_emerald_gold_1791137357370.jpg';
+import islamiWhiteImage from '../assets/images/theme_islami_white_1791137370473.jpg';
+import baliTerracottaImage from '../assets/images/theme_bali_terracotta_1791137387370.jpg';
 
 export const INITIAL_USERS: User[] = [
   {
@@ -38,7 +42,7 @@ export const INITIAL_THEMES: ThemeItem[] = [
     category: 'Rustic',
     price: 149000,
     accentColor: '#9c614b',
-    previewImage: '/src/assets/images/theme_warm_botanical_1791137336774.jpg',
+    previewImage: warmBotanicalImage,
     description: 'Nuansa linen alami, dedaunan kering halus, dan tipografi serif hangat.',
     popular: true,
   },
@@ -49,7 +53,7 @@ export const INITIAL_THEMES: ThemeItem[] = [
     category: 'Modern',
     price: 189000,
     accentColor: '#5a7463',
-    previewImage: '/src/assets/images/theme_emerald_gold_1791137357370.jpg',
+    previewImage: emeraldGoldImage,
     description: 'Aksen sage lembut berpadu guratan emas minimalis nan anggun.',
     popular: true,
   },
@@ -60,7 +64,7 @@ export const INITIAL_THEMES: ThemeItem[] = [
     category: 'Islami',
     price: 129000,
     accentColor: '#607264',
-    previewImage: '/src/assets/images/theme_islami_white_1791137370473.jpg',
+    previewImage: islamiWhiteImage,
     description: 'Ornamen arabesque bersahaja dengan kutipan ayat suci penuh ketenangan.',
     popular: false,
   },
@@ -71,7 +75,7 @@ export const INITIAL_THEMES: ThemeItem[] = [
     category: 'Minimalis',
     price: 99000,
     accentColor: '#786e64',
-    previewImage: '/src/assets/images/theme_warm_botanical_1791137336774.jpg',
+    previewImage: warmBotanicalImage,
     description: 'Tata letak lapang, garis bersih, dan fokus pada keindahan momen Anda.',
     popular: false,
   },
@@ -82,7 +86,7 @@ export const INITIAL_THEMES: ThemeItem[] = [
     category: 'Adat',
     price: 159000,
     accentColor: '#8a5a44',
-    previewImage: '/src/assets/images/theme_bali_terracotta_1791137387370.jpg',
+    previewImage: baliTerracottaImage,
     description: 'Harmoni motif budaya tradisional dengan sentuhan kesederhanaan modern.',
     popular: false,
   },
@@ -93,7 +97,7 @@ export const INITIAL_THEMES: ThemeItem[] = [
     category: 'Modern',
     price: 139000,
     accentColor: '#a1634c',
-    previewImage: '/src/assets/images/theme_bali_terracotta_1791137387370.jpg',
+    previewImage: baliTerracottaImage,
     description: 'Gradasi hangat senja tropis dengan kelembutan estetika earth-tone.',
     popular: false,
   }
@@ -130,10 +134,10 @@ export const INITIAL_INVITATIONS: Invitation[] = [
     musicTitle: 'Canon in D - Romantic Wedding Orchestra',
     musicUrl: 'https://actions.google.com/sounds/v1/weather/rain_heavy.ogg', // reliable safe web sound
     galleryPhotos: [
-      '/src/assets/images/theme_warm_botanical_1791137336774.jpg',
-      '/src/assets/images/theme_emerald_gold_1791137357370.jpg',
-      '/src/assets/images/theme_islami_white_1791137370473.jpg',
-      '/src/assets/images/theme_bali_terracotta_1791137387370.jpg',
+      warmBotanicalImage,
+      emeraldGoldImage,
+      islamiWhiteImage,
+      baliTerracottaImage,
     ],
     loveStories: [
       {

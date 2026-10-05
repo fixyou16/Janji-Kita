@@ -1,0 +1,16 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e11]:
+      - paragraph [ref=e12]: Mahligai
+      - paragraph [ref=e13]: Akun dilindungi sesi server
+    - heading "Masuk ke akun" [level=1] [ref=e14]
+    - paragraph [ref=e15]: Gunakan email dan kata sandi akun Anda.
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - text: Email
+        - textbox "Email" [ref=e18]
+      - generic [ref=e19]:
+        - text: Kata sandi
+        - textbox "Kata sandi" [ref=e20]
+      - button "Masuk" [ref=e21]
+    - button "Belum punya akun? Daftar sebagai customer" [ref=e25]

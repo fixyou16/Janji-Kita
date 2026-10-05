@@ -5,7 +5,7 @@ import {
   Users, Plus, Search, Share2, Check, Copy, 
   Trash2, ArrowLeft, QrCode, MessageSquare, 
   CheckCircle2, XCircle, Clock, ExternalLink, 
-  Eye, Phone, UserCheck, Sparkles, Filter 
+  Eye, Phone, UserCheck, Sparkles, Filter, Pencil
 } from 'lucide-react';
 
 export const GuestbookManager: React.FC = () => {
@@ -24,7 +24,8 @@ export const GuestbookManager: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [selectedRsvpFilter, setSelectedRsvpFilter] = useState<string>('Semua');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isGuestFormOpen, setIsGuestFormOpen] = useState(false);
+  const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const [activeWaModalGuest, setActiveWaModalGuest] = useState<Guest | null>(null);
 
   // New Guest Form State
@@ -51,25 +52,39 @@ export const GuestbookManager: React.FC = () => {
   const totalPax = guests.filter((g) => g.rsvpStatus === 'attending').reduce((acc, g) => acc + g.rsvpPax, 0);
   const checkedInCount = guests.filter((g) => g.checkedIn).length;
 
-  const handleCreateGuest = (e: React.FormEvent) => {
+  const handleSaveGuest = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newGuestName.trim()) return;
+    const name = newGuestName.trim();
+    if (!name) return;
 
-    addGuest({
-      invitationId: activeInvitation.id,
-      name: newGuestName.trim(),
-      phone: newGuestPhone.trim(),
-      category: newGuestCategory,
-      rsvpStatus: 'pending',
-      rsvpPax: newGuestPax,
-      wishes: '',
-      checkedIn: false,
-    });
+    if (editingGuest) {
+      updateGuest(editingGuest.id, {
+        name,
+        slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+        phone: newGuestPhone.trim(),
+        category: newGuestCategory,
+        rsvpPax: newGuestPax,
+      });
+      showToast(`Data "${name}" berhasil diperbarui.`);
+    } else {
+      addGuest({
+        invitationId: activeInvitation.id,
+        name,
+        phone: newGuestPhone.trim(),
+        category: newGuestCategory,
+        rsvpStatus: 'pending',
+        rsvpPax: newGuestPax,
+        wishes: '',
+        checkedIn: false,
+      });
+      showToast(`Tamu "${name}" berhasil ditambahkan.`);
+    }
 
     setNewGuestName('');
     setNewGuestPhone('');
-    setIsAddModalOpen(false);
-    showToast(`Tamu "${newGuestName}" berhasil ditambahkan.`);
+    setNewGuestPax(1);
+    setEditingGuest(null);
+    setIsGuestFormOpen(false);
   };
 
   const getWaMessage = (guest: Guest) => {
@@ -130,7 +145,14 @@ Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir. Ter
         </div>
 
         <button
-          onClick={() => setIsAddModalOpen(true)}
+          onClick={() => {
+            setEditingGuest(null);
+            setNewGuestName('');
+            setNewGuestPhone('');
+            setNewGuestCategory('Teman Kantor');
+            setNewGuestPax(1);
+            setIsGuestFormOpen(true);
+          }}
           className="px-3.5 py-1.5 rounded-xl bg-[#9c614b] hover:bg-[#88523e] text-white text-xs font-medium transition shadow-2xs flex items-center justify-center gap-1.5 self-start sm:self-auto"
         >
           <Plus className="w-3.5 h-3.5" />
@@ -310,6 +332,21 @@ Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir. Ter
                         </button>
 
                         <button
+                          onClick={() => {
+                            setEditingGuest(guest);
+                            setNewGuestName(guest.name);
+                            setNewGuestPhone(guest.phone);
+                            setNewGuestCategory(guest.category);
+                            setNewGuestPax(guest.rsvpPax);
+                            setIsGuestFormOpen(true);
+                          }}
+                          className="p-1 rounded-lg text-[#766e65] hover:text-[#9c614b] hover:bg-[#faf9f6] transition"
+                          title="Edit data tamu"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
                           onClick={() => deleteGuest(guest.id)}
                           className="p-1 rounded-lg text-[#9c9489] hover:text-red-500 hover:bg-[#faf9f6] transition"
                           title="Hapus Tamu"
@@ -328,14 +365,14 @@ Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir. Ter
       </div>
 
       {/* Modal Tambah Tamu */}
-      {isAddModalOpen && (
+      {isGuestFormOpen && (
         <div className="fixed inset-0 z-50 bg-[#36322e]/40 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-[#e8e4dc] max-w-sm w-full p-5 space-y-4 shadow-lg animate-fadeIn">
             <h3 className="font-serif-luxury text-base font-medium text-[#36322e]">
-              Tambah Tamu Undangan
+              {editingGuest ? 'Edit Data Tamu' : 'Tambah Tamu Undangan'}
             </h3>
             
-            <form onSubmit={handleCreateGuest} className="space-y-3">
+            <form onSubmit={handleSaveGuest} className="space-y-3">
               <div>
                 <label className="block text-[11px] font-medium text-[#36322e] mb-1">
                   Nama Lengkap / Keluarga
@@ -398,7 +435,7 @@ Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir. Ter
               <div className="flex items-center gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setIsAddModalOpen(false)}
+                  onClick={() => setIsGuestFormOpen(false)}
                   className="flex-1 py-1.5 rounded-xl border border-[#e8e4dc] text-xs font-medium text-[#766e65] hover:bg-[#faf9f6]"
                 >
                   Batal
@@ -407,7 +444,7 @@ Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila berkenan hadir. Ter
                   type="submit"
                   className="flex-1 py-1.5 rounded-xl bg-[#9c614b] hover:bg-[#88523e] text-white text-xs font-medium shadow-2xs"
                 >
-                  Simpan Tamu
+                  {editingGuest ? 'Simpan Perubahan' : 'Simpan Tamu'}
                 </button>
               </div>
             </form>
