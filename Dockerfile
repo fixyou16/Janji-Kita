@@ -1,22 +1,16 @@
-# Use official Node.js LTS image
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install --production
-
-# Copy source code
+COPY package.json bun.lock ./
+RUN npm install --legacy-peer-deps
 COPY . .
 
-# Build React app
+ENV VITE_AUTH_MODE=server
 RUN npm run build
 
-# Expose port (Cloud Run uses 8080 by default)
+ENV NODE_ENV=production
+
 EXPOSE 8080
 
-# Start application
-CMD ["npm", "run", "preview"]
+CMD ["npm", "start"]

@@ -73,61 +73,44 @@ export const Header: React.FC<{
             >
               Katalog
             </button>
-            <button
-              onClick={() => {
-                switchRole('customer');
-                setCurrentView('customer_dashboard');
-              }}
-              className={`hover:text-[#36322e] transition ${
-                currentView === 'customer_dashboard' ? 'text-[#9c614b] font-medium' : ''
-              }`}
-            >
-              Dashboard
-            </button>
-            <button
-              onClick={() => {
-                switchRole('customer');
-                setCurrentView('editor');
-              }}
-              className={`hover:text-[#36322e] transition ${
-                currentView === 'editor' ? 'text-[#9c614b] font-medium' : ''
-              }`}
-            >
-              Editor Undangan
-            </button>
-            <button
-              onClick={() => {
-                switchRole('customer');
-                setCurrentView('guestbook');
-              }}
-              className={`hover:text-[#36322e] transition ${
-                currentView === 'guestbook' ? 'text-[#9c614b] font-medium' : ''
-              }`}
-            >
-              Buku Tamu
-            </button>
-            <button
-              onClick={() => {
-                switchRole('reseller');
-                setCurrentView('reseller_portal');
-              }}
-              className={`hover:text-[#36322e] transition ${
-                currentView === 'reseller_portal' ? 'text-[#9c614b] font-medium' : ''
-              }`}
-            >
-              Mitra WO
-            </button>
-            <button
-              onClick={() => {
-                switchRole('super_admin');
-                setCurrentView('admin_panel');
-              }}
-              className={`hover:text-[#36322e] transition ${
-                currentView === 'admin_panel' ? 'text-[#9c614b] font-medium' : ''
-              }`}
-            >
-              Admin
-            </button>
+            {currentUser.role === 'customer' && (
+              <>
+                <button
+                  onClick={() => setCurrentView('customer_dashboard')}
+                  className={`hover:text-[#36322e] transition ${currentView === 'customer_dashboard' ? 'text-[#9c614b] font-medium' : ''}`}
+                >
+                  Dashboard
+                </button>
+                <button
+                  onClick={() => setCurrentView('editor')}
+                  className={`hover:text-[#36322e] transition ${currentView === 'editor' ? 'text-[#9c614b] font-medium' : ''}`}
+                >
+                  Editor Undangan
+                </button>
+                <button
+                  onClick={() => setCurrentView('guestbook')}
+                  className={`hover:text-[#36322e] transition ${currentView === 'guestbook' ? 'text-[#9c614b] font-medium' : ''}`}
+                >
+                  Buku Tamu
+                </button>
+              </>
+            )}
+            {currentUser.role === 'reseller' && (
+              <button
+                onClick={() => setCurrentView('reseller_portal')}
+                className={`hover:text-[#36322e] transition ${currentView === 'reseller_portal' ? 'text-[#9c614b] font-medium' : ''}`}
+              >
+                Mitra WO
+              </button>
+            )}
+            {currentUser.role === 'super_admin' && (
+              <button
+                onClick={() => setCurrentView('admin_panel')}
+                className={`hover:text-[#36322e] transition ${currentView === 'admin_panel' ? 'text-[#9c614b] font-medium' : ''}`}
+              >
+                Admin
+              </button>
+            )}
           </nav>
 
           {/* Right Actions */}
@@ -160,7 +143,7 @@ export const Header: React.FC<{
               {roleDropdownOpen && (
                 <div className="absolute right-0 mt-1.5 w-52 bg-white border border-[#e8e4dc] rounded-2xl shadow-lg p-1.5 z-50 animate-fadeIn">
                   <div className="px-2.5 py-1 text-[10px] uppercase tracking-wider text-[#9c9489]">
-                    Ganti Peran Akun
+                    Pratinjau Peran (Demo)
                   </div>
                   {roles.map((r) => {
                     const isCurrent = currentUser.role === r.id;
@@ -196,7 +179,7 @@ export const Header: React.FC<{
             <button
               onClick={onOpenDevDrawer}
               className="p-1.5 rounded-xl text-[#9c9489] hover:text-[#9c614b] hover:bg-white transition"
-              title="Arsitektur Backend Laravel"
+              title="Dokumentasi Arsitektur Backend"
             >
               <Code2 className="w-3.5 h-3.5" />
             </button>
@@ -225,56 +208,19 @@ export const Header: React.FC<{
             >
               Katalog Desain
             </button>
-            <button
-              onClick={() => {
-                switchRole('customer');
-                setCurrentView('customer_dashboard');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white"
-            >
-              Dashboard Pengantin
-            </button>
-            <button
-              onClick={() => {
-                switchRole('customer');
-                setCurrentView('editor');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white"
-            >
-              Editor Undangan
-            </button>
-            <button
-              onClick={() => {
-                switchRole('customer');
-                setCurrentView('guestbook');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white"
-            >
-              Buku Tamu & RSVP
-            </button>
-            <button
-              onClick={() => {
-                switchRole('reseller');
-                setCurrentView('reseller_portal');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white"
-            >
-              Portal Mitra WO
-            </button>
-            <button
-              onClick={() => {
-                switchRole('super_admin');
-                setCurrentView('admin_panel');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white"
-            >
-              Panel Super Admin
-            </button>
+            {currentUser.role === 'customer' && (
+              <>
+                <button onClick={() => { setCurrentView('customer_dashboard'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white">Dashboard Pengantin</button>
+                <button onClick={() => { setCurrentView('editor'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white">Editor Undangan</button>
+                <button onClick={() => { setCurrentView('guestbook'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white">Buku Tamu & RSVP</button>
+              </>
+            )}
+            {currentUser.role === 'reseller' && (
+              <button onClick={() => { setCurrentView('reseller_portal'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white">Portal Mitra WO</button>
+            )}
+            {currentUser.role === 'super_admin' && (
+              <button onClick={() => { setCurrentView('admin_panel'); setMobileMenuOpen(false); }} className="w-full text-left px-3 py-1.5 rounded-xl text-[#36322e] hover:bg-white">Panel Super Admin</button>
+            )}
           </div>
         )}
 

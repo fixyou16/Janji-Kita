@@ -58,10 +58,10 @@ export const CheckoutModal: React.FC = () => {
         </div>
         <div className="space-y-1">
           <h2 className="font-serif-luxury text-xl font-medium text-[#36322e]">
-            Pembayaran Berhasil!
+            Simulasi Pembayaran Selesai
           </h2>
           <p className="text-xs text-[#766e65]">
-            Pesanan #{activeOrderNumber} telah aktif secara otomatis di sistem Mahligai.
+            Pesanan demo #{activeOrderNumber} ditandai lunas. Tidak ada pembayaran nyata yang diproses.
           </p>
         </div>
 
@@ -114,7 +114,7 @@ export const CheckoutModal: React.FC = () => {
           Konfirmasi Pesanan & Pembayaran
         </h1>
         <p className="text-xs text-[#766e65]">
-          Aktivasi otomatis instan melalui Payment Gateway Midtrans.
+          Mode demo: pembayaran hanya disimulasikan di browser. Tidak ada transaksi uang sungguhan.
         </p>
       </div>
 
@@ -264,7 +264,7 @@ export const CheckoutModal: React.FC = () => {
               {isProcessing ? (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Menyiapkan Midtrans Snap...</span>
+                  <span>Menyiapkan simulasi pembayaran...</span>
                 </>
               ) : (
                 <>
@@ -275,7 +275,7 @@ export const CheckoutModal: React.FC = () => {
             </button>
             <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#9c9489]">
               <Lock className="w-3 h-3" />
-              <span>Transaksi aman 256-bit SSL encrypted</span>
+              <span>Simulasi lokal — bukan payment gateway aktif</span>
             </div>
           </div>
 
@@ -283,7 +283,7 @@ export const CheckoutModal: React.FC = () => {
 
       </div>
 
-      {/* Midtrans Snap Simulator Modal */}
+      {/* Demo payment dialog; production payments must be verified by a server-side gateway. */}
       {showSnapModal && (
         <div className="fixed inset-0 z-50 bg-[#36322e]/45 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-[#e8e4dc] max-w-sm w-full p-5 space-y-4 shadow-xl animate-fadeIn">
@@ -292,7 +292,7 @@ export const CheckoutModal: React.FC = () => {
                 <div className="w-5 h-5 rounded bg-[#9c614b] flex items-center justify-center text-white text-[10px] font-bold">
                   M
                 </div>
-                <span className="font-medium text-xs text-[#36322e]">Midtrans Snap Simulator</span>
+                <span className="font-medium text-xs text-[#36322e]">Simulasi Pembayaran (Demo)</span>
               </div>
               <button
                 onClick={() => setShowSnapModal(false)}

@@ -1,0 +1,24 @@
+- main [ref=f1e4]:
+  - generic [ref=f1e5]:
+    - generic [ref=f1e12]:
+      - paragraph [ref=f1e13]: Mahligai
+      - paragraph [ref=f1e14]: Akun dilindungi sesi server
+    - heading "Buat akun customer" [level=1] [ref=f1e27]
+    - paragraph [ref=f1e16]: Pendaftaran mandiri hanya membuat akun customer. Peran lain dikelola admin.
+    - alert [ref=f1e39]: Permintaan lintas origin ditolak.
+    - generic [ref=f1e17]:
+      - generic [ref=f1e28]:
+        - text: Nama lengkap
+        - textbox "Nama lengkap" [ref=f1e29]: Test Customer
+      - generic [ref=f1e30]:
+        - text: Nomor telepon
+        - textbox "Nomor telepon" [ref=f1e31]: "081234567890"
+      - generic [ref=f1e18]:
+        - text: Email
+        - textbox "Email" [ref=f1e19]: browser-test@example.test
+      - generic [ref=f1e20]:
+        - text: Kata sandi
+        - textbox "Kata sandi Minimal 12 karakter." [ref=f1e32]: customer-test-password-2026
+        - generic [ref=f1e33]: Minimal 12 karakter.
+      - button "Buat Akun" [ref=f1e34]
+    - button "Sudah punya akun? Masuk" [ref=f1e38]
