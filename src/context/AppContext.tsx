@@ -68,15 +68,15 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AppProvider: React.FC<{ children: React.ReactNode; initialRole?: UserRole }> = ({ children, initialRole = 'customer' }) => {
   // 1. Core State with LocalStorage fallback
   const [users, setUsers] = useState<User[]>(() => {
     const saved = localStorage.getItem('mahligai_users');
     return saved ? JSON.parse(saved) : INITIAL_USERS;
   });
 
-  const [currentRole, setCurrentRole] = useState<UserRole>('customer');
-  const currentRoleRef = useRef<UserRole>('customer');
+  const [currentRole, setCurrentRole] = useState<UserRole>(initialRole);
+  const currentRoleRef = useRef<UserRole>(initialRole);
 
   const [themes, setThemes] = useState<ThemeItem[]>(() => {
     const saved = localStorage.getItem('mahligai_themes');
@@ -179,6 +179,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const switchRole = (role: UserRole) => {
+    if (import.meta.env.VITE_AUTH_MODE === 'supabase' && role !== currentRoleRef.current) {
+      showToast('Peran akun ditetapkan oleh admin dan tidak dapat diubah dari menu demo.');
+      return;
+    }
     currentRoleRef.current = role;
     setCurrentRole(role);
     if (role === 'customer') {
