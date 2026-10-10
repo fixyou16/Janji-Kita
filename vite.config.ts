@@ -15,7 +15,7 @@ const resolveGithubPagesBase = () => {
 
 export default defineConfig(({ command }) => {
   const hasSupabaseConfig = Boolean(process.env.VITE_SUPABASE_URL && process.env.VITE_SUPABASE_PUBLISHABLE_KEY);
-  const authMode = process.env.VITE_AUTH_MODE || (hasSupabaseConfig ? "supabase" : (command === "serve" ? "server" : "demo"));
+  const authMode = process.env.VITE_AUTH_MODE || (hasSupabaseConfig ? "supabase" : "demo");
   return {
     base: authMode === "server" ? "/" : resolveGithubPagesBase(),
     define: {
