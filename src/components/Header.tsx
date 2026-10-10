@@ -8,7 +8,9 @@ import {
 
 export const Header: React.FC<{
   onOpenDevDrawer: () => void;
-}> = ({ onOpenDevDrawer }) => {
+  onLogin?: () => void;
+  onLogout?: () => void;
+}> = ({ onOpenDevDrawer, onLogin, onLogout }) => {
   const { 
     currentUser, 
     currentView, 
@@ -125,8 +127,11 @@ export const Header: React.FC<{
               <span>Lihat Undangan</span>
             </button>
 
-            {/* Role Switcher Menu */}
-            <div className="relative">
+            {onLogin && <button onClick={onLogin} className="px-3 py-1.5 rounded-xl bg-[#9c614b] text-white text-xs font-medium hover:bg-[#88523e]">Masuk</button>}
+            {onLogout && <button onClick={onLogout} className="px-3 py-1.5 rounded-xl bg-white border border-[#e8e4dc] text-xs text-[#766e65] hover:text-[#9c614b]">Keluar</button>}
+
+            {/* Role Switcher Menu (demo only; Supabase mode uses the database role) */}
+            <div className={`relative ${import.meta.env.VITE_AUTH_MODE === 'supabase' ? 'hidden' : ''}`}>
               <button
                 onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#faf9f6] border border-[#e8e4dc] text-xs text-[#36322e] transition"
