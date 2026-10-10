@@ -9,8 +9,8 @@ const roleLabels: Record<UserRole, string> = {
   super_admin: 'Super Admin',
 };
 
-export const AuthScreen: React.FC = () => {
-  const {error, login, register, refreshSession} = useAuth();
+export const AuthScreen: React.FC<{onBack?: () => void}> = ({onBack}) => {
+  const {error, notice, login, register, refreshSession} = useAuth();
   const [isRegistering, setIsRegistering] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,6 +36,7 @@ export const AuthScreen: React.FC = () => {
   return (
     <main className="min-h-screen bg-[#f7f5f0] px-4 py-10 text-[#36322e]">
       <section className="mx-auto w-full max-w-md rounded-3xl border border-[#e8e4dc] bg-white p-7 shadow-sm">
+        {onBack && <button onClick={onBack} className="mb-5 text-xs text-[#766e65] hover:text-[#9c614b]">← Kembali ke katalog</button>}
         <div className="mb-7 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#9c614b] text-white">
             <LockKeyhole className="h-5 w-5" />
@@ -55,6 +56,7 @@ export const AuthScreen: React.FC = () => {
             : 'Gunakan email dan kata sandi akun Anda.'}
         </p>
 
+        {notice && <div role="status" className="mt-4 rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-800">{notice}</div>}
         {(error || formError) && (
           <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">
             {formError || error}
